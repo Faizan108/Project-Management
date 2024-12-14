@@ -1,6 +1,6 @@
 package com.project.management.AppConfig;
 
-import java.sql.Date;
+
 
 import javax.crypto.SecretKey;
 
@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+
+import java.util.Date;
 
 public class JwtProvider {
 	
