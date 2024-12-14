@@ -11,22 +11,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 public class AppConfiguration {
 	
 	@Bean
-	SecurityFilterChain requestChain(HttpSecurity http)
-	{
+	SecurityFilterChain requestChain(HttpSecurity http) throws Exception {
 		http.sessionManagement(Management -> Management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-		.authorizeHttpRequests(Authorize -> Authorize.requestMatchers("/api/**").authenticated().anyRequest().permitAll())
+		.authorizeHttpRequests(Authorize -> Authorize.requestMatchers("/auth/**").permitAll())
+				.authorizeHttpRequests((request-> request.requestMatchers(new AntPathRequestMatcher("/auth/hello")).permitAll().anyRequest().authenticated()))
 		.addFilterBefore(new JwtTokenValidator(),BasicAuthenticationFilter.class)
-		.csrf(csrf -> csrf.disable())
-		.cors(cors ->cors.configurationSource(corsConfigurationSource()));
+		.csrf(csrf -> csrf.disable());
+//		.cors(cors ->cors.configurationSource((CorsConfigurationSource) corsConfigurationSource()));
 		
 		return http.build();
 	}
